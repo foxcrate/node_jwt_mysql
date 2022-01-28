@@ -48,35 +48,44 @@ app.post('api/register', (req, res) => {
 app.post('/api/login', (req, res) => {
 
   db.query("SELECT id,name,email,password FROM users WHERE email = "+"'"+req.body.email+"'" ,(err, result, fields) =>{
-    if (err) throw err;
+    if (err) console.log('Error: ',err);
     //console.log(result[0]['password']);
+    console.log(result);
 
-    var user = {
-      id: result[0]['id'],
-      name: result[0]['name'],
-      email: result[0]['email']
-    }
+    if(!result.length > 0){
+      res.json({
+        message:"Wrong Credintials"
+      });
+    }else{
 
-    bcrypt.compare(req.body.password , result[0]['password']  , function(err, result) {
-
-      if(result == true){
-
-        jwt.sign({user}, 'secretkey', { expiresIn: '120s' }, (err, token) => {
-          res.json({
-            authToken:token,
-            message:"Logged In Successfully"
-          });
-        });
-
-      }else{
-
-        res.json({
-          message: "Wrong Password"
-        });
-
+      var user = {
+        id: result[0]['id'],
+        name: result[0]['name'],
+        email: result[0]['email']
       }
 
-    });
+      bcrypt.compare(req.body.password , result[0]['password']  , function(err, result) {
+
+        if(result == true){
+
+          jwt.sign({user}, 'secretkey', { expiresIn: '120s' }, (err, token) => {
+            res.json({
+              authToken:token,
+              message:"Logged In Successfully"
+            });
+          });
+
+        }else{
+
+          res.json({
+            message: "Wrong Password"
+          });
+
+        }
+
+      });
+
+    }
 
   });
 
