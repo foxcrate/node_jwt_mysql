@@ -9,4 +9,4 @@
 
 - User register through "/api/register" by submitting name, email and password.
 - User login through "/api/login". If Right creditionals submiited; user will get a token to user it.
-- User view all system users through "/api/all_users". The authentication token should be added as 'Authorization' header.
+- User view all system users through "/api/all_users". The authentication token should be added as 'Authorization' header to be able to view al users
